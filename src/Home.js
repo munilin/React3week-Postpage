@@ -17,13 +17,13 @@ const Home = (props) => {
 };
 
 const Container = styled.div`
-
-  width:800px;
-  height:500px;
-  background: red;
+  width:600px;
+  height:350px;
   position:absolute;
   left:30%;
   top:20%;
+  border:1px solid;
+  
   `;
 
 export default Home;
