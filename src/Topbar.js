@@ -10,26 +10,19 @@ const Topbar = (props) => {
 
   return (
     <>
-      <div
-        style={{
-          margin: "15px",
-          position: "fixed",
-          right: "15px",
-          width: "700px",
-        }}
-      >
-        {/* navigater로 연결하기*/}
+      <Bar>
         <button
-          style={{
-            position: "fixed",
-            left: "15px",
-          }}
           onClick={() => {
             navigate("/");
           }}
         >
           홈화면
         </button>
+
+          프로필사진
+
+          닉네임
+          
         <button
           onClick={() => {
             navigate("/signup");
@@ -53,9 +46,17 @@ const Topbar = (props) => {
         >
           로그아웃
         </button>
-      </div>
+      </Bar>
     </>
   );
 };
+
+const Bar = styled.div`
+  max-width: 800px;
+  min-height: 30px;
+  padding: 16px;
+  margin: 20px auto;
+  border: 1px solid #ddd;
+`;
 
 export default Topbar;

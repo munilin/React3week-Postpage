@@ -5,8 +5,13 @@ import Topbar from "./Topbar";
 import { auth, db } from "./shared/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { getDocs, where, query, collection } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
+
+  const navigate = useNavigate();
+
+
   const id_ref = React.useRef(null);
   const pw1_ref = React.useRef(null);
 
@@ -27,23 +32,47 @@ const Login = (props) => {
     user_docs.forEach((u) => {
       console.log(u.data());
     });
+    navigate("/");
   };
 
   return (
     <>
-      <Topbar /><br />
+      <Topbar />
+      <br />
       <Div>
-        아이디 : <input ref={id_ref} /> <br />
-        비밀번호 : <input ref={pw1_ref} />
+        <h1>로그인</h1>
+        아 이 디
         <br />
-        <button onClick={loginFB}>로그인</button>
+        <input type="email" ref={id_ref} /> <br />
+        비밀번호
+        <br />
+        <input type="password" ref={pw1_ref} />
+        <br />
+        <button
+          onClick={() => {
+            loginFB();
+            // navigate같이 넣으면 먼저 실행되서 이동이 안됨 그래서 loginFB 끝으로 옮김
+          }}
+        >
+          로그인
+        </button>
       </Div>
     </>
   );
 };
 
 const Div = styled.div`
-margin: 100px;
-`
+  max-width: 800px;
+  height: 300px;
+  border: 1px solid;
+  text-align: left;
+  margin: 20px auto;
+  padding: 16px;
+  & input {
+    margin-bottom: 15px;
+    width: 500px;
+    border: 1px solid blue;
+  }
+`;
 
 export default Login;
