@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { loadWriteFB, addWriteFB } from "./redux/modules/write";
+import { loadWriteFB, deleteWriteFB, updateWriteFB } from "./redux/modules/write";
 import Topbar from "./Topbar";
 
 const Home = (props) => {
@@ -15,7 +15,7 @@ const Home = (props) => {
   }, []);
   // 렌더링 될 때마다 실행 됨
   // useEffect가 middleware를 실행시켜줌
-  // useEffect 안에 [value] =  화면에 value값이  변경될 때 실행
+  // useEffect 안에 [value] =  화면에 value값이 변경될 때 실행
   // 빈칸은 화면에 첫 렌더링이 될 때 실행
 
   const write_data = useSelector((state) => state.write);
@@ -31,32 +31,31 @@ const Home = (props) => {
         return (
           <Container
             key={index} //쓰면안되는 이유가 있음
-            onClick={() => {
-              navigate("/post" + index);
-            }}
           >
-            <div>
-              <div>프로필사진 / 닉네임 / 날짜</div>
-              <button onClick={() => navigate("/post")}>수정하기</button>
-              <div
-                style={{
-                  backgroundColor: "#efefef",
-                  width: "150px",
-                  height: "150px",
-                }}
-              >
-                <img
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  src={list.img_url}
-                  alt="preview-img"
-                />
-              </div>
-              <div>{list.write}</div>
-              <h5>좋아요 / 댓글 / 하트</h5>
-            </div>
+            <div>프로필사진 / 닉네임 / 날짜</div>
+            <button
+              onClick={() => {
+                navigate("/post" + index);
+                dispatch(updateWriteFB(list[index].id));
+              }}
+            >
+              수정하기
+            </button>
+
+            <button
+              onClick={() => {
+                dispatch(deleteWriteFB(list[index]));
+                console.log("삭제하기 버튼을 눌렀어!");
+              }}
+            >
+              삭제하기
+            </button>
+
+            <FileBox>
+              <img src={list.img_url} alt="preview-img" />
+            </FileBox>
+            <div>{list.write}</div>
+            <h5>좋아요 / 댓글 / 하트</h5>
           </Container>
         );
       })}
@@ -74,12 +73,22 @@ const Home = (props) => {
 
 const Container = styled.div`
   width: 800px;
-  height: 400px;
+  height: 600px;
   margin: 20px auto;
   padding: 16px;
   border: 1px solid;
   & div {
     margin: 20px auto;
+  }
+`;
+
+const FileBox = styled.div`
+  background-color: #efefef;
+  width: 300px;
+  height: 300px;
+  & img {
+    width: 100%;
+    height: 100%;
   }
 `;
 

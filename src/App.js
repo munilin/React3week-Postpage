@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { auth, db } from "./shared/firebase";
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { auth } from "./shared/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 
 import Home from "./Home";
@@ -16,7 +16,6 @@ import Topbar from "./Topbar";
 function App() {
 
   const [is_login, setIsLogin] = React.useState(false);
-
   // console.log(auth.currentUser)
 
   const loginCheck = async (user) => {

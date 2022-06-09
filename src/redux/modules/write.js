@@ -14,13 +14,13 @@ import {
 const LOAD = "write/LOAD";
 const CREATE = "write/CREATE";
 const UPDATE = "write/UPDATE";
-const REMOVE = "write/REMOVE";
+const DELETE = "write/DELETE";
 
 const initialState = {
   list: [
     {
-      write: "hihiman",
-      img_url: "textestestest",
+      // write: "hihiman",
+      // img_url: "textestestest",
     },
   ],
 };
@@ -34,21 +34,21 @@ export function createWrite(write) {
   return { type: CREATE, write };
 }
 
-export function updateWrite(write) {
-  return { type: UPDATE, write };
+export function updateWrite(write_index) {
+  return { type: UPDATE, write_index };
+}
+//index는 수정이나삭제 할 글이 몇번째인지 알아야지
+export function deleteWrite(write) {
+  return { type: DELETE, write };
 }
 
-export function removeWrite(write) {
-  return { type: REMOVE, write };
-}
-
-// middlewares 파이어베이스랑 통신하는 부분
-// 가져오기
+// middlewares 파이어베이스랑 데이터 연결
+// 미들웨어 가져오기
 export const loadWriteFB = () => {
   return async function (dispatch) {
     const write_data = await getDocs(collection(db, "write"));
-    // console.log(write_data);
     let write_list = [];
+    // console.log(write_data);
     // firebase 콜렉션 db에서 write를 가져올거야, 콘솔확인
     // 빈 배열 하나 만들어주고
 
@@ -67,16 +67,60 @@ export const loadWriteFB = () => {
   };
 };
 
-//추가하기
+// 미들웨어 추가하기
 export const addWriteFB = (write) => {
-  return async function (dispatch) {
-    const docRef = await addDoc(collection(db, "write"), write);
-    const write_data = { id: docRef.id, ...write };
-    dispatch(createWrite(write_data));
-    // console.log(write_data);
-  };
+  return async function (dispatch){
+    console.log(write);
+      const docRef = await addDoc(collection(db, "write"), write);
+      const write_data = {id: docRef.id, ...write};
+      dispatch(createWrite(write_data));
+    // 추가하는것도 비동기 작업이다 그래서 async,await로 차례대로하자
+    // await =  addDoc 작업 끝날때까지 기다렸다가 답주고가
+    // addDoc((db,콜렉션이름, 추가할데이터 함수로 받아온 write))
+};
 };
 
+// 미들웨어 수정하기
+export const updateWriteFB = (write_id) => {
+  return async function (dispatch, getState) {
+    const docRef = doc(db, "write", write_id);
+    await updateDoc(docRef, { completed: true });
+    // docRef에 write콜렉션의 어떤것을 수정해줄건데
+    // updateDoc = docRef를 어떻게 수정해줄거야
+    // getState()를 사용해서 스토어의 데이터를 가져올 수 있어요.
+    console.log(getState().write);
+    const _write_list = getState().write.list;
+    const write_index = _write_list.findIndex((b) => {  
+      return b.id === write_id;
+ })
+    dispatch(updateWrite(write_index));
+  };
+};
+    // write 데이터를 다 가져오자
+    // findIndex로 몇 번째에 있는 지 찾기!
+    // updateBucketFB의 파라미터로 넘겨받은 아이디와 
+    // 아이디가 독같은 요소는 몇 번째에 있는 지 찾아봐요!
+
+// 미들웨어 삭제하기
+export const deleteWriteFB = (write_id) => {
+  return async function (dispatch, getState) {
+    console.log(write_id);
+    if(!write_id){
+      window.alert("아이디가 없네요!");
+      return;
+    }
+    const docRef = doc(db, "write", write_id);
+    await deleteDoc(docRef);
+    
+     const _write_list = getState().write.list;
+     const write_index = _write_list.findIndex((b) => {
+       return b.id === write_id;
+     });
+
+     dispatch(deleteWrite(write_index));
+  }
+}
+    
 // Reducer
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -90,12 +134,11 @@ export default function reducer(state = initialState, action = {}) {
     // list에 넣어서 보여줘
 
     case "write/CREATE": {
-      // console.log("이제 값을 바꿀꺼야!");
-      const new_Write_list = [...state.list, action.write];
-      // console.log({list: new_Write_list});
-      return { ...state, list: new_Write_list };
+      console.log("이제 값을 넣을꺼야!");
+      const new_write_list = [...state.list, action.write];
+      // console.log({list: new_write_list});
+      return { ...state, list: new_write_list };
       // console.log(new_Write_list);
-      // return { ...state의 맨앞에 붙여줘 / 반대는 자리 바꾸기}
     }
     // 액션에 createWrite이 디스패치되어 case를 switch했다,
     // 리턴값은 리스트에 새로운 버킷리스트를 넣어줄거야

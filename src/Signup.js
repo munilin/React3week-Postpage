@@ -44,6 +44,7 @@ const Signup = (props) => {
       <br />
       {/* 다른 이미지image,파일선택file도 input으로 함 */}
       <Box>
+        <form>
         <h1>회원가입</h1>
         <div>아이디</div>
         <input type="email" ref={id_ref} placeholder="아이디를 입력해주세요" />
@@ -61,6 +62,7 @@ const Signup = (props) => {
           ref={pw2_ref}
           placeholder="비밀번호를 다시 입력해주세요"
         />
+        </form>
         <br />
         <br />
         <button

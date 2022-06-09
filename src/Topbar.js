@@ -18,11 +18,7 @@ const Topbar = (props) => {
         >
           홈화면
         </button>
-
-          프로필사진
-
-          닉네임
-          
+        프로필사진 닉네임
         <button
           onClick={() => {
             navigate("/signup");
@@ -40,7 +36,6 @@ const Topbar = (props) => {
         </button>
         <button
           onClick={() => {
-            navigate("/");
             signOut(auth);
           }}
         >
