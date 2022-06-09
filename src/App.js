@@ -17,7 +17,7 @@ function App() {
 
   const [is_login, setIsLogin] = React.useState(false);
 
-  console.log(auth.currentUser)
+  // console.log(auth.currentUser)
 
   const loginCheck = async (user) => {
     if(user) {
@@ -38,6 +38,7 @@ function App() {
         <Route path="/signup" element={<Signup/>}/> 
         <Route path="/login" element={<Login/>}/> 
         <Route path="/post" element={<Post/>}/> 
+        <Route path="/post:index" element={<Post/>}/> 
         <Route path="/caution" element={<Caution/>}/> 
         <Route path="/noti" element={<Noti/>}/> 
         <Route path="/review" element={<Review/>}/> 
